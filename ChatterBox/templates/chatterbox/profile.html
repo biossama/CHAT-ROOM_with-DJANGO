@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+
+        <!-- BROWSER TOPICS -->
+        <div class="col-md-4">
+            <div class="card bg-secondary text-light p-4 rounded">
+                <h3 class="card-title">Browse Topics</h3>
+                <hr class="text-light">
+
+                <ul class="list-unstyled">
+                    {% for topic in topics %}
+                    <li>
+						<a class="d-flex justify-content-between text-ligth" href="{% url 'home' %}?q={{ topic.name }}"><span class="text-light">{{ topic.name|title }}</span><span class="badge badge-primary bounded-bill">{{topic.room_set.all.count}}</span></a><hr>
+					</li>
+                    {% endfor %}
+                </ul>
+                {% for tt in topic_room %}
+                    {{ tt }}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- MAIN ROOM -->
+        <div class="col-md-8 ">
+            <div class="card bg-secondary text-light p-4 rounded">
+               {% for room in rooms reversed %}
+				{% if forloop.first %}
+               <h5 class="card-title">{{ room.host.username|title }} Profile</h5>
+				 {% endif %}
+				{% endfor %}
+                <h6 class="card-subtitle mb-2 text-muted">Connected as: {{ request.user }}</h6>
+                <!-- <hr class="thick-hr"> -->
+                <h5><a href="{% url 'create_room' %}" class="text-light btn-sm bg-primary rounded"><i class="fa fa-plus-square" aria-hidden="true"></i>&nbsp;Create Room</a></h5>
+				<p>{{message.content}}</p>
+                <hr>
+                <ul class="list-unstyled">
+                    {% for room in rooms reversed %}
+                    <li class="mt-2">@{{ room.host.username }}</li><br>
+                    {% if user.is_authenticated and request.user == room.host %}
+                    <li class="d-flex justify-content-end"><a href="{% url 'delete_room' room.id %}" class="text-danger"><i class="fa fa-trash" aria-hidden="true"></i></a>&nbsp;<a href="{% url 'update_room' room.id %}" class="text" style="color:blue;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></li><br>
+                    {% endif %}
+                    <li><a href="{% url 'room' room.id %}" class="text-primary-900"><strong style="font-size:20px; color:blue">{{ room.name|upper }}</strong></a></li><br>
+                    <li class="text-ligth">{{ room.description }}</li><br>
+                    <span class="badge badge-success text-light ">{{ room.topic.name }}</span>
+                    <hr>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

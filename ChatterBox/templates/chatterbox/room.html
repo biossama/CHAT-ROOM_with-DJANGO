@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+
+        <!-- Main Content Column -->
+
+        <div class="col-md-8">
+            <div class="card bg-dark text-light p-4 rounded">
+                <h4>{{ room.name|title }}</h4>
+                <p>{{ room.description }}</p><br>
+                <h5> <span class="text-info">Conversation</span></h5>
+                <hr>
+
+                {% for message in model_messages %}
+                <div class="card mb-3">
+                    <div class="card-body text-dark">
+                        {% if request.user == message.user %}
+                        <form method="POST" action="{% url 'delete_message' message.id %}">
+                            {% csrf_token %}
+                           <button type="submit" class="btn btn-danger btn-sm float-end">Delete &nbsp;<i class="fa fa-trash" aria-hidden="true"></i></button> 
+                        </form>
+                        {% endif %}
+                        <small class="text-muted">@{{ message.user.username }} {{ message.created|timesince }} ago</small>
+                        <p>{{ message.content }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+
+                {% if user.is_authenticated %}
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <input class="form-control w-50 rounded" type="text" name="content" placeholder="Write what you want...">
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Submit</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Participants Column -->
+        <div class="col-md-4">
+            <div class="card bg-dark text-ligth p-4 rounded text-center">
+                <h4>Participants</h4>
+                <hr>
+                {% for user in participants %}
+                <p>{{ user.username }}</p>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

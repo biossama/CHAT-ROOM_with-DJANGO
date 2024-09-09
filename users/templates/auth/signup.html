@@ -1,0 +1,17 @@
+{% extends 'base.html'%}
+
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+
+<div class="container mt-5 px-5 py-3 rounded bg-secondary">
+	<h3> Create Your account</h3>
+	<form method="post">
+		{% csrf_token %}
+		{{ form|crispy}}
+		<input type="submit" value="sign up" class="btn btn-primary text-dark"/>
+	</form>
+</div>
+{% endblock %}
+

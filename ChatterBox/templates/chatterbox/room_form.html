@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg text-ligth">
+                <div class="card-header bg-primary text-ligth">
+                    <h2 class="card-title text-center">Create a Room</h2>
+                </div>
+                <div class="card-body bg-dark">
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <div class="text-center">
+                            <input type="submit" value="Submit" class="btn btn-success mt-3" />&nbsp;
+                            <a href="{% url 'home' %}" ><input type="button" value="Cancel" class="btn btn-secondary mt-3" /></a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5 bg-dark text-light p-4 rounded">
+	<div class="row">
+
+
+	<!-- BROWSER TOPICS -->
+
+		<div class="col">
+			<h3>browser Topics</h3>
+			<hr>
+			<ul>
+			{% for topic in topics %}
+				<li><a href="{% url 'home' %}?q={{topic.name}}">{{topic.name}}</a></li>
+			{% endfor %}
+			</ul>
+		</div>
+
+
+	<!-- MAIN ROOM -->
+
+	<div class="col-6">
+		<h5>{{room_count}} rooms available</h5>
+		<h3 style="display:inline">home <h6 style="display:inline">active user : {{request.user}}</h6></h3>
+		<hr>
+		<h5><a href="{% url 'create_room' %}">create room</a></h5>
+		<hr>
+		<ul>
+			{% for room in rooms reversed %}
+				<li><a href="{% url 'profile' room.host.id %}">@{{room.host.username}}</a></li>
+	
+				{% if user.is_authenticated and request.user == room.host %}
+				<li><a href="{% url 'delete_room' room.id %}">Delete room</a></li>
+				<a href="{% url 'update_room'  room.id %}">update room</a>
+				{% endif %}
+				<li><a href="{% url 'room' room.id %}"> {{room.name}}</a></li>
+				<li>{{room.description}}</li>
+				<span>{{room.topic.name}}</span>
+				<hr>
+			{% endfor %}
+	</ul>
+	</div>
+
+
+	<!-- RECENET ACTIVITY -->
+
+	<div class="col">
+		<h3>recent activite</h3>
+		{% for message in messages %}
+		{% if request.user == message.user %}
+		<a style="display:block;" href="{% url 'delete_message' message.id %}">delete</a>
+		{% endif %}
+		<small>{{ message.user }} posted {{message.created|timesince}} ago</small>
+		<small> replayed to "{{message.room}}"</small>
+		<p>	{{message.content|slice:":40"}}...</p>
+		<hr>
+		{% endfor%}
+	</div>
+	</div>
+</div>
+{% endblock %}

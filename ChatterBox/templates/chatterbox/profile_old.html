@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5 bg-dark text-light p-4 rounded">
+	<div class="row">
+
+
+	<!-- BROWSER TOPICS -->
+
+		<div class="col">
+			<h3>browser Topics</h3>
+			<hr>
+			<ul>
+			{% for topic in topics %}
+				<li><a href="{% url 'home' %}?q={{topic.name}}">{{topic.name}}</a></li>
+			{% endfor %}
+			</ul>
+			{% for tt in topic_room %}
+				{{tt}}
+			{% endfor %}
+		</div>
+
+
+	<!-- MAIN ROOM -->
+	<div class="col-8 text-center">
+
+		<h5 style="display:inline">{{user.username}} profile <h6 style="display:block">active user : {{request.user}}</h6></h5>
+		<hr>
+		<h5><a href="{% url 'create_room' %}">create room</a></h5>
+		<hr>
+		<ul style="list-style-type: none;">
+			{% for room in rooms reversed %}
+				<li>@{{room.host.username}}</li>
+	
+				{% if user.is_authenticated and request.user == room.host %}
+				<li><a href="{% url 'delete_room' room.id %}">Delete room</a></li>
+				<a href="{% url 'update_room'  room.id %}">update room</a>
+				{% endif %}
+				<li><a href="{% url 'room' room.id %}"> {{room.name}}</a></li>
+				<li>{{room.description}}</li>
+				<span>{{room.topic.name}}</span>
+				<hr>
+			{% endfor %}
+	</ul>
+	</div>
+
+</div>
+{% endblock %}

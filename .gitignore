@@ -1,0 +1,38 @@
+# Fichiers Python
+*.py[cod]
+__pycache__/
+*.so
+*.pyd
+
+# Dossier migrations Django
+**/migrations/
+
+# Environnement virtuel
+env/
+venv/
+.venv/
+ENV/
+.env/
+
+# Fichiers de configuration locaux
+*.env
+.env.*
+*.local
+*.DS_Store
+
+# Logs
+*.log
+
+# Dossiers médias et statiques
+/media/
+staticfiles/
+static/
+
+# Base de données SQLite (si utilisée)
+*.sqlite3
+
+# Fichiers de l'IDE (PyCharm, VSCode, etc.)
+.idea/
+.vscode/
+*.swp
+*.swo

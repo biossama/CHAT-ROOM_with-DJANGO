@@ -1,0 +1,253 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid mt-5 text-light p-4 rounded-0">
+    <div class="row">
+
+        <!-- BROWSER TOPICS -->
+
+        <div class="col-md-3">
+            <h3>Browse Topics</h3>
+            <hr>
+		<!--			<a class="d-flex justify-content-between" href="{% url 'home' %}"><span>All</span> <span class="badge badge-success">{{topics.count}}</span></a> -->
+            <ul class="list-group">
+                {% for topic in topics %}
+
+                <li class="list-group-item bg-secondary">
+                    <a class="text-light d-flex justify-content-between" href="{% url 'home' %}?q={{topic.name}}"><span>{{topic.name|title}}</span> <span class="badge bg-primary rounded-pill ml-5">{{topic.room_set.all.count}}</span></a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+
+
+        <!-- MAIN ROOM -->
+        <div class="col-md-6 text-light p-4 rounded">
+			{% if user.is_authenticated %}
+            <h6 class="d-inline">Connected as : <span class="badge badge-success">@{{request.user.username}}</span></h6>
+            <hr>
+			{% else %} 
+            <h6 class="d-inline">You are not Connected ! Join us </h6><br><br>
+
+			{% endif %}
+            
+			<div class="d-flex justify-content-between" <span class="text-muted ">{% if room_count <= 1%} {{room_count}} room available {% else%} {{room_count}} rooms available {% endif%}</span><a href="{% url 'create_room' %}" class="btn btn-sm btn-primary"><i class="fa fa-plus-square" aria-hidden="true"></i>&nbsp;Create Room</a></div>
+            <hr>
+            <ul class="list-group">
+                {% for room in rooms reversed %}
+                <li class="list-group-item rounded bg-secondary" >
+                    <div>
+                        <a href="{% url 'profile' room.host.id %}" class="text-primary-900 text-decoration-none"><strong style="font-size:20px"><span class="text-light " style="text-decoration: none !important;">Room created by:</span> @{{room.host.username}}</strong></a>
+                        {% if user.is_authenticated and request.user == room.host %}
+					    <a class="badge bg-danger  float-right ml-2 text-info mt-2 text-light" href="{% url 'delete_room' room.id %}">Delete Room <i class="fa fa-trash" aria-hidden="true"></i></a>
+		                <a class="badge bg-warning float-right text-info mt-2 text-light" href="{% url 'update_room' room.id %}">Update Room <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        {% endif %}
+                    </div><br>
+                    <a class="text-light" href="{% url 'room' room.id %}">{{room.name|title}}</a><br><br>
+                    <p>{{room.description}}</p>
+                    <span class="badge badge-info">{{room.topic.name}}</span>
+                </li>
+                <hr>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- RECENT ACTIVITY -->
+        <div class="col-md-3">
+            <h3>Recent Activity</h3>
+            {% for message in messages %}
+            <div class="card mb-3 bg-secondary text-light">
+                <div class="card-body">
+                    {% if request.user == message.user %}
+                    <a class="badge bg-danger text-light" href="{% url 'delete_message' message.id %}"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                    {% endif %}
+                    <small><span class="text-light">@{{ message.user }}</span> posted {{message.created|timesince}} ago</small>
+                    <small>replied to "{{message.room}}"</small><br><br>
+                    <p>{{message.content|slice:":40"}}...</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment%}
+
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid mt-5 bg-dark text-light p-4 rounded-0">
+    <div class="row">
+
+        <!-- BROWSER TOPICS -->
+        <div class="col-md-3">
+            <h3>Browse Topics</h3>
+            <hr>
+            <ul class="list-group">
+                {% for topic in topics %}
+                <li class="list-group-item bg-dark">
+                    <a class="text-light" href="{% url 'home' %}?q={{topic.name}}">{{topic.name}}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- MAIN ROOM -->
+        <div class="col-md-6">
+            <h5>{{room_count}} rooms available</h5>
+            <h3 class="d-inline">Home</h3>
+            <h6 class="d-inline">active user: {{request.user}}</h6>
+            <hr>
+            <h5>
+                <a class="btn btn-primary" href="{% url 'create_room' %}">Create Room</a>
+            </h5>
+            <hr>
+            <ul class="list-group">
+                {% for room in rooms reversed %}
+                <li class="list-group-item list-group-item-custom">
+                    <div class="bg-dark-custom text-light-custom p-2 rounded">
+                        <a href="{% url 'profile' room.host.id %}" class="text-light">@{{room.host.username}}</a>
+                        {% if user.is_authenticated and request.user == room.host %}
+                        <a class="btn btn-danger btn-sm float-right ml-2 text-dark text-light" href="{% url 'delete_room' room.id %}">Delete Room</a>
+                        <a class="btn btn-warning btn-sm float-right text-light" href="{% url 'update_room' room.id %}">Update Room</a>
+                        {% endif %}
+                    </div>
+                    <a class="text-light" href="{% url 'room' room.id %}">{{room.name}}</a>
+                    <p>{{room.description}}</p>
+                    <span class="badge badge-info">{{room.topic.name}}</span>
+                </li>
+                <hr>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- RECENT ACTIVITY -->
+        <div class="col-md-3">
+            <h3>Recent Activity</h3>
+            {% for message in messages %}
+            <div class="card mb-3 bg-dark text-light">
+                <div class="card-body">
+                    {% if request.user == message.user %}
+                    <a class="btn btn-sm btn-danger float-right" href="{% url 'delete_message' message.id %}">Delete</a>
+                    {% endif %}
+                    <small>{{ message.user }} posted {{message.created|timesince}} ago</small>
+                    <small>replied to "{{message.room}}"</small>
+                    <p>{{message.content|slice:":40"}}...</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5 bg-dark text-light p-4 rounded">
+    <div class="row">
+
+        <!-- BROWSER TOPICS -->
+        <div class="col-md-3">
+            <h3>Browse Topics</h3>
+            <hr>
+            <ul class="list-group">
+                {% for topic in topics %}
+                <li class="list-group-item bg-dark">
+                    <a class="text-light" href="{% url 'home' %}?q={{topic.name}}">{{topic.name}}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- MAIN ROOM -->
+        <div class="col-md-6">
+            <h5>{{room_count}} rooms available</h5>
+            <h3 class="d-inline">Home</h3>
+            <h6 class="d-inline">active user: {{request.user}}</h6>
+            <hr>
+            <h5>
+                <a class="btn btn-primary" href="{% url 'create_room' %}">Create Room</a>
+            </h5>
+            <hr>
+            <ul class="list-group">
+                {% for room in rooms reversed %}
+                <li class="list-group-item bg-dark">
+                    <div>
+                        <a href="{% url 'profile' room.host.id %}" class="text-light">@{{room.host.username}}</a>
+                        {% if user.is_authenticated and request.user == room.host %}
+                        <a class="btn btn-danger btn-sm float-right ml-2" href="{% url 'delete_room' room.id %}">Delete Room</a>
+                        <a class="btn btn-warning btn-sm float-right" href="{% url 'update_room' room.id %}">Update Room</a>
+                        {% endif %}
+                    </div>
+                    <a class="text-light" href="{% url 'room' room.id %}">{{room.name}}</a>
+                    <p>{{room.description}}</p>
+                    <span class="badge badge-info">{{room.topic.name}}</span>
+                </li>
+                <hr>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- RECENT ACTIVITY -->
+        <div class="col-md-3">
+            <h3>Recent Activity</h3>
+            {% for message in messages %}
+            <div class="card mb-3 bg-dark text-light">
+                <div class="card-body">
+                    {% if request.user == message.user %}
+                    <a class="btn btn-sm btn-danger float-right" href="{% url 'delete_message' message.id %}">Delete</a>
+                    {% endif %}
+                    <small>{{ message.user }} posted {{message.created|timesince}} ago</small>
+                    <small>replied to "{{message.room}}"</small>
+                    <p>{{message.content|slice:":40"}}...</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% endcomment %}
