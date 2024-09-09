@@ -20,8 +20,8 @@ Authentication: Django's built-in user authentication system
 Follow these steps to set up the project locally on your machine.
 
 ### Prerequisites
-. Python 3
-. Django
+####Python 3
+####Django
 
 ### Steps
 Clone the repository:
