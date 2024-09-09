@@ -43,8 +43,13 @@ Install required Python packages using pip:
 pip install -r requirements.txt
 ```
 ## Screenshots
+### register page
 ![HOME!](screenshots/chat_room-register.png)
+### sign up page
 ![HOME!](screenshots/chat-room_signup.png)
-![HOME!](screenshots/chat_room-conversation.png)
+### home page
 ![HOME!](screenshots/chat-room.png)
+### user profile
 ![HOME!](screenshots/chat-room_profile-user.png)
+### room's conversations ( specific topic )
+![HOME!](screenshots/chat_room-conversation.png)
