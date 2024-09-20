@@ -26,7 +26,7 @@ Follow these steps to set up the project locally on your machine.
 ### Steps
 Clone the repository:
 ```bash
-git clone https://github.com/yourusername/chatterbox.git
+git clone https://github.com/biossama/chatterbox.git
 cd chatterbox
 ```
 ### Create and activate a virtual environment:
